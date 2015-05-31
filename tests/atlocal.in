@@ -1,0 +1,2 @@
+CPPFLAGS="-I$abs_top_builddir/lib @CPPFLAGS@"
+LIBTOOL='@LIBTOOL@'

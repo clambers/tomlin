@@ -1,0 +1,13 @@
+## --------------- ##
+## Library testing ##
+## --------------- ##
+
+AT_BANNER([Library testing.])
+
+AT_SETUP([Test 1])
+AT_CHECK([true], [0], [ignore], [ignore])
+AT_CLEANUP
+
+AT_SETUP([Test 2])
+AT_CHECK([false], [1], [ignore], [ignore])
+AT_CLEANUP
