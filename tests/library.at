@@ -21,10 +21,10 @@
 
 AT_BANNER([Library testing.])
 
-AT_SETUP([Basic compile])
-AT_DATA([real.cc],
-[[#include <value.hh>
-#include <iostream>
+AT_SETUP([Basic program])
+AX_TEST([basic],
+[AX_INCLUDE_HEADER
+[#include <iostream>
 int main(void) {
   toml::object_type obj;
   obj["foo"] = toml::value<toml::string_type>("string");
@@ -35,7 +35,4 @@ int main(void) {
   return 0;
 }
 ]])
-AT_CHECK([$LIBTOOL --tag=CC --mode=compile $CXX $CPPFLAGS $CXXFLAGS -c real.cc], [0], [ignore], [ignore])
-AT_CHECK([$LIBTOOL --tag=CC --mode=link $CXX $LDFLAGS -o real real.lo $LIBS], [0], [ignore], [ignore])
-AT_CHECK([./real], [0], [ignore], [ignore])
 AT_CLEANUP

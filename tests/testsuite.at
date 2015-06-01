@@ -18,4 +18,20 @@
 AT_INIT
 AT_COLOR_TESTS
 
+# AX_INCLUDE_HEADER
+# -----------------
+# Standard code for including the library header.
+m4_define([AX_INCLUDE_HEADER], [#include <value.hh>])
+
+# AX_TEST(TARGET, CODE)
+# ---------------------
+# Compile a C++ program and check that it exits cleanly.
+m4_define([AX_TEST],
+[m4_pushdef([TARGET], m4_bpatsubst([$1], [/*]))
+AT_DATA([TARGET.cc], [$2])
+AT_CHECK([$LIBTOOL --tag=CC --mode=compile $CXX $CPPFLAGS $CXXFLAGS -c TARGET.cc], [0], [ignore], [ignore])
+AT_CHECK([$LIBTOOL --tag=CC --mode=link $CXX $LDFLAGS -o TARGET TARGET.lo $LIBS], [0], [ignore], [ignore])
+AT_CHECK([./TARGET], [0], [ignore], [ignore])
+])
+
 m4_include([library.at])
