@@ -35,9 +35,6 @@ namespace toml {
 
   private:
     value_type v;
-
-    void array_helper() const;
-    void object_helper();
   };
 
   using value_type = boost::make_recursive_variant<

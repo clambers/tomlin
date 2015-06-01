@@ -9,7 +9,11 @@ AT_DATA([real.cc],
 [[#include <value.hh>
 #include <iostream>
 int main(void) {
-  std::cout << "Hello world!" << std::endl;
+  toml::value<toml::object_type> obj;
+  obj["foo"] = toml::value<toml::string_type>("string");
+  obj["bar"] = toml::value<toml::integer_type>(42);
+  obj["baz"] = toml::value<toml::float_type>(3.14);
+  obj.dump(std::cout);
   return 0;
 }
 ]])
