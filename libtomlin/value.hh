@@ -119,6 +119,14 @@ namespace toml {
               boost::make_function_output_iterator(ostream_joiner(os)));
     os << " }";
   }
+
+  template<typename T> value<T> make_value(T const& val) {
+    return value<T>(val);
+  }
+
+  value<string_type> make_value(char const* val) {
+    return value<string_type>(std::string(val));
+  }
 }
 
 #endif

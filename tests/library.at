@@ -27,10 +27,10 @@ AX_TEST([basic],
 [#include <iostream>
 int main(void) {
   toml::object_type obj;
-  obj["foo"] = toml::value<toml::string_type>("string");
-  obj["bar"] = toml::value<toml::integer_type>(42);
-  obj["baz"] = toml::value<toml::float_type>(3.14);
-  auto obj_value = toml::value<toml::object_type>(obj);
+  obj["foo"] = toml::make_value("string");
+  obj["bar"] = toml::make_value(42);
+  obj["baz"] = toml::make_value(3.14);
+  auto obj_value = toml::make_value(obj);
   obj_value.dump(std::cout);
   return 0;
 }
