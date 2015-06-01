@@ -28,15 +28,20 @@ EXTRA_DIST = $(TESTSUITE_AT) $(TESTSUITE)
 DISTCLEANFILES = $(check_SCRIPTS)
 MAINTAINERCLEANFILES = $(TESTSUITE)
 
+AX_V_TEST = $(AX_V_TEST_$(V))
+AX_V_TEST_ = $(AX_V_TEST_$(AM_DEFAULT_VERBOSITY))
+AX_V_TEST_0 = @echo "  TEST    $(TESTSUITE)";
+AX_V_TEST_1 =
+
 $(TESTSUITE): $(TESTSUITE_AT)
 	$(AM_V_GEN) $(AUTOTEST) -I$(srcdir) -o $@.tmp $@.at
 	$(AM_V_at)mv $@.tmp $@
 
 check-local: $(RUN_TESTSUITE_deps)
-	$(TESTSUITE)
+	$(AX_V_TEST) $(TESTSUITE)
 
 installcheck-local: $(RUN_TESTSUITE_deps)
-	$(TESTSUITE) AUTOTEST_PATH='$(bindir)'
+	$(AX_V_TEST) $(TESTSUITE) AUTOTEST_PATH='$(bindir)'
 
 clean-local:
 	test ! -f $(TESTSUITE) || $(TESTSUITE) --clean
