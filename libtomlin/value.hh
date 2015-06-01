@@ -61,8 +61,8 @@ namespace toml {
     value<integer_type>,
     value<float_type>,
     value<string_type>,
-    value<array_type_cons<boost::recursive_variant_> >,
-    value<object_type_cons<boost::recursive_variant_> >
+    value<array_type_cons<boost::recursive_variant_>>,
+    value<object_type_cons<boost::recursive_variant_>>
   >::type;
 
   using array_type = array_type_cons<value_type>;

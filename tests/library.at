@@ -26,18 +26,16 @@ AT_DATA([real.cc],
 [[#include <value.hh>
 #include <iostream>
 int main(void) {
-  toml::value<toml::object_type> obj;
+  toml::object_type obj;
   obj["foo"] = toml::value<toml::string_type>("string");
   obj["bar"] = toml::value<toml::integer_type>(42);
   obj["baz"] = toml::value<toml::float_type>(3.14);
-  obj.dump(std::cout);
+  auto obj_value = toml::value<toml::object_type>(obj);
+  obj_value.dump(std::cout);
   return 0;
 }
 ]])
-AT_DATA([expout],
-[[Hello world!
-]])
 AT_CHECK([$LIBTOOL --tag=CC --mode=compile $CXX $CPPFLAGS $CXXFLAGS -c real.cc], [0], [ignore], [ignore])
 AT_CHECK([$LIBTOOL --tag=CC --mode=link $CXX $LDFLAGS -o real real.lo $LIBS], [0], [ignore], [ignore])
-AT_CHECK([./real], [0], [expout], [ignore])
+AT_CHECK([./real], [0], [ignore], [ignore])
 AT_CLEANUP
