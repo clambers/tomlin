@@ -19,6 +19,7 @@ AC_PREREQ([2.69])
 
 AC_INIT([Tomlin], [0.0.1], [https://github.com/dutch/tomlin/issues], [],
 [https://github.com/dutch/tomlin])
+AC_COPYRIGHT([Copyright (C) 2015 Chris Lamberson.])
 AC_CONFIG_SRCDIR([libtomlin/tomlin.hpp])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
