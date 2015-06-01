@@ -1,2 +1,6 @@
-CPPFLAGS="-I$abs_top_builddir/lib @CPPFLAGS@"
-LIBTOOL='@LIBTOOL@'
+LIBTOOL="$abs_top_builddir/libtool"
+CXX='@CXX@'
+CPPFLAGS="-I$abs_top_srcdir/libtomlin @CPPFLAGS@"
+CXXFLAGS='-std=c++11'
+LDFLAGS=
+LIBS="$abs_top_builddir/libtomlin/libtomlin.la"

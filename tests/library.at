@@ -4,10 +4,19 @@
 
 AT_BANNER([Library testing.])
 
-AT_SETUP([Test 1])
-AT_CHECK([true], [0], [ignore], [ignore])
-AT_CLEANUP
-
-AT_SETUP([Test 2])
-AT_CHECK([false], [1], [ignore], [ignore])
+AT_SETUP([Basic compile])
+AT_DATA([real.cc],
+[[#include <value.hh>
+#include <iostream>
+int main(void) {
+  std::cout << "Hello world!" << std::endl;
+  return 0;
+}
+]])
+AT_DATA([expout],
+[[Hello world!
+]])
+AT_CHECK([$LIBTOOL --tag=CC --mode=compile $CXX $CPPFLAGS $CXXFLAGS -c real.cc], [0], [ignore], [ignore])
+AT_CHECK([$LIBTOOL --tag=CC --mode=link $CXX $LDFLAGS -o real real.lo $LIBS], [0], [ignore], [ignore])
+AT_CHECK([./real], [0], [expout], [ignore])
 AT_CLEANUP
