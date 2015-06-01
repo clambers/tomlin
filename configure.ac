@@ -28,7 +28,7 @@ AM_INIT_AUTOMAKE([1.14 foreign -Wall -Werror -Wno-portability])
 AM_SILENT_RULES([yes])
 
 AC_PROG_CXX
-AX_BOOST_BASE
+AX_BOOST_BASE([], [], [AC_MSG_ERROR([no boost installation found.])])
 LT_INIT
 
 AC_CONFIG_HEADERS([config.h])
