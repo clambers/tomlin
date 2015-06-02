@@ -98,35 +98,16 @@ namespace toml {
     os << v;
   }
 
-  template<> void value<boolean_type>::dump(std::ostream& os) const {
-    os << (v ? "true" : "false");
-  }
-
-  template<> void value<string_type>::dump(std::ostream& os) const {
-    os << '"' << v << '"';
-  }
-
-  template<> void value<array_type>::dump(std::ostream& os) const {
-    os << "[ ";
-    std::copy(std::begin(v), std::end(v),
-              boost::make_function_output_iterator(ostream_joiner(os)));
-    os << " ]";
-  }
-
-  template<> void value<object_type>::dump(std::ostream& os) const {
-    os << "{ ";
-    std::copy(std::begin(v), std::end(v),
-              boost::make_function_output_iterator(ostream_joiner(os)));
-    os << " }";
-  }
+  template<> void value<boolean_type>::dump(std::ostream&) const;
+  template<> void value<string_type>::dump(std::ostream&) const;
+  template<> void value<array_type>::dump(std::ostream&) const;
+  template<> void value<object_type>::dump(std::ostream&) const;
 
   template<typename T> value<T> make_value(T const& val) {
     return value<T>(val);
   }
 
-  value<string_type> make_value(char const* val) {
-    return value<string_type>(std::string(val));
-  }
+  value<string_type> make_value(char const*);
 }
 
 #endif

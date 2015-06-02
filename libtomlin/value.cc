@@ -21,6 +21,28 @@
 
 using namespace toml;
 
+template<> void value<boolean_type>::dump(std::ostream& os) const {
+  os << (v ? "true" : "false");
+}
+
+template<> void value<string_type>::dump(std::ostream& os) const {
+  os << '"' << v << '"';
+}
+
+template<> void value<array_type>::dump(std::ostream& os) const {
+  os << "[ ";
+  std::copy(std::begin(v), std::end(v),
+            boost::make_function_output_iterator(ostream_joiner(os)));
+  os << " ]";
+}
+
+template<> void value<object_type>::dump(std::ostream& os) const {
+  os << "{ ";
+  std::copy(std::begin(v), std::end(v),
+            boost::make_function_output_iterator(ostream_joiner(os)));
+  os << " }";
+}
+
 ostream_visitor::ostream_visitor(std::ostream& os) : os(os) {}
 
 void ostream_visitor::operator()(dumpable const& d) const {
@@ -39,4 +61,8 @@ void ostream_joiner::operator()(object_type::value_type const& v) {
   os << (first ? "" : ", ") << v.first << ": ";
   boost::apply_visitor(ostream_visitor(os), v.second);
   first = false;
+}
+
+value<string_type> make_value(char const* val) {
+  return value<string_type>(std::string(val));
 }

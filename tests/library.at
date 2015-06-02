@@ -22,16 +22,16 @@
 AT_BANNER([Library testing.])
 
 AT_SETUP([Basic program])
+AT_DATA([test.toml],
+[["foo"   "bar"  "baz"
+"quux"
+]])
 AX_TEST([basic],
 [AX_INCLUDE_HEADER
 [#include <iostream>
 int main(void) {
-  toml::object_type obj;
-  obj["foo"] = toml::make_value("string");
-  obj["bar"] = toml::make_value(42);
-  obj["baz"] = toml::make_value(3.14);
-  auto obj_value = toml::make_value(obj);
-  obj_value.dump(std::cout);
+  toml::parser p("test.toml");
+  p.parse();
   return 0;
 }
 ]])

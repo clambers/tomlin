@@ -22,7 +22,9 @@ AT_COLOR_TESTS
 # AX_INCLUDE_HEADER
 # -----------------
 # Standard code for including the library header.
-m4_define([AX_INCLUDE_HEADER], [#include <value.hh>])
+m4_define([AX_INCLUDE_HEADER], [#include <exceptions.hh>
+#include <value.hh>
+#include <parser.hh>])
 
 # AX_TEST(TARGET, CODE)
 # ---------------------
