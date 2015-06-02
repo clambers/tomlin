@@ -1,5 +1,5 @@
-#ifndef TOMLIN_HPP
-#define TOMLIN_HPP
+#ifndef EXCEPTIONS_HH
+#define EXCEPTIONS_HH
 
 /**
  * Copyright (C) 2015 Chris Lamberson.
@@ -20,8 +20,20 @@
  * along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tomlin/exceptions.hh>
-#include <tomlin/value.hh>
-#include <tomlin/parser.hh>
+#include <exception>
+#include <stdexcept>
+#include <sstream>
+
+namespace toml {
+  class runtime_error : public std::runtime_error {
+  public:
+    runtime_error(std::string const&);
+    virtual char const* what() const noexcept override;
+
+  private:
+    static std::ostringstream full_message;
+    std::string error_message;
+  };
+}
 
 #endif

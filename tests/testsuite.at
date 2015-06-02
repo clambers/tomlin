@@ -1,4 +1,40 @@
+# Copyright (C) 2015 Chris Lamberson.
+#
+# This file is part of Tomlin.
+#
+# Tomlin is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Tomlin is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
+
 AT_INIT
+AT_COPYRIGHT([Copyright (C) 2015 Chris Lamberson.])
 AT_COLOR_TESTS
+
+# AX_INCLUDE_HEADER
+# -----------------
+# Standard code for including the library header.
+m4_define([AX_INCLUDE_HEADER], [#include <exceptions.hh>
+#include <value.hh>
+#include <parser.hh>])
+
+# AX_TEST(TARGET, CODE)
+# ---------------------
+# Compile a C++ program and check that it exits cleanly.
+m4_define([AX_TEST],
+[m4_pushdef([TARGET], m4_bpatsubst([$1], [/*]))
+AT_DATA([TARGET.cc], [$2])
+AT_CHECK([$LIBTOOL --tag=CC --mode=compile $CXX $CPPFLAGS $CXXFLAGS -c TARGET.cc], [0], [ignore], [ignore])
+AT_CHECK([$LIBTOOL --tag=CC --mode=link $CXX $LDFLAGS -o TARGET TARGET.lo $LIBS], [0], [ignore], [ignore])
+AT_CHECK([./TARGET], [0], [ignore], [ignore])
+])
 
 m4_include([library.at])

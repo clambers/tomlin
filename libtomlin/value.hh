@@ -1,6 +1,25 @@
 #ifndef VALUE_HH
 #define VALUE_HH
 
+/**
+ * Copyright (C) 2015 Chris Lamberson.
+ *
+ * This file is part of Tomlin.
+ *
+ * Tomlin is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Tomlin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <boost/variant/recursive_variant.hpp>
 #include <boost/function_output_iterator.hpp>
 #include <iostream>
@@ -42,8 +61,8 @@ namespace toml {
     value<integer_type>,
     value<float_type>,
     value<string_type>,
-    value<array_type_cons<boost::recursive_variant_> >,
-    value<object_type_cons<boost::recursive_variant_> >
+    value<array_type_cons<boost::recursive_variant_>>,
+    value<object_type_cons<boost::recursive_variant_>>
   >::type;
 
   using array_type = array_type_cons<value_type>;
@@ -79,27 +98,16 @@ namespace toml {
     os << v;
   }
 
-  template<> void value<boolean_type>::dump(std::ostream& os) const {
-    os << (v ? "true" : "false");
+  template<> void value<boolean_type>::dump(std::ostream&) const;
+  template<> void value<string_type>::dump(std::ostream&) const;
+  template<> void value<array_type>::dump(std::ostream&) const;
+  template<> void value<object_type>::dump(std::ostream&) const;
+
+  template<typename T> value<T> make_value(T const& val) {
+    return value<T>(val);
   }
 
-  template<> void value<string_type>::dump(std::ostream& os) const {
-    os << '"' << v << '"';
-  }
-
-  template<> void value<array_type>::dump(std::ostream& os) const {
-    os << "[ ";
-    std::copy(std::begin(v), std::end(v),
-              boost::make_function_output_iterator(ostream_joiner(os)));
-    os << " ]";
-  }
-
-  template<> void value<object_type>::dump(std::ostream& os) const {
-    os << "{ ";
-    std::copy(std::begin(v), std::end(v),
-              boost::make_function_output_iterator(ostream_joiner(os)));
-    os << " }";
-  }
+  value<string_type> make_value(char const*);
 }
 
 #endif

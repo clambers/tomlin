@@ -1,6 +1,3 @@
-#ifndef TOMLIN_HPP
-#define TOMLIN_HPP
-
 /**
  * Copyright (C) 2015 Chris Lamberson.
  *
@@ -20,8 +17,17 @@
  * along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tomlin/exceptions.hh>
-#include <tomlin/value.hh>
-#include <tomlin/parser.hh>
+#include "exceptions.hh"
 
-#endif
+using namespace toml;
+
+std::ostringstream runtime_error::full_message;
+
+runtime_error::runtime_error(std::string const& e)
+  : std::runtime_error("tomlin error: "), error_message(e) {}
+
+char const* runtime_error::what() const noexcept {
+  full_message.str("");
+  full_message << std::runtime_error::what() << error_message;
+  return full_message.str().c_str();
+}

@@ -1,26 +1,38 @@
+# Copyright (C) 2015 Chris Lamberson.
+#
+# This file is part of Tomlin.
+#
+# Tomlin is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Tomlin is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
+
 ## --------------- ##
 ## Library testing ##
 ## --------------- ##
 
 AT_BANNER([Library testing.])
 
-AT_SETUP([Basic compile])
-AT_DATA([real.cc],
-[[#include <value.hh>
-#include <iostream>
+AT_SETUP([Basic program])
+AT_DATA([test.toml],
+[["foo"   "bar"  "baz"
+"quux"
+]])
+AX_TEST([basic],
+[AX_INCLUDE_HEADER
+[#include <iostream>
 int main(void) {
-  toml::value<toml::object_type> obj;
-  obj["foo"] = toml::value<toml::string_type>("string");
-  obj["bar"] = toml::value<toml::integer_type>(42);
-  obj["baz"] = toml::value<toml::float_type>(3.14);
-  obj.dump(std::cout);
+  toml::parser p("test.toml");
+  p.parse();
   return 0;
 }
 ]])
-AT_DATA([expout],
-[[Hello world!
-]])
-AT_CHECK([$LIBTOOL --tag=CC --mode=compile $CXX $CPPFLAGS $CXXFLAGS -c real.cc], [0], [ignore], [ignore])
-AT_CHECK([$LIBTOOL --tag=CC --mode=link $CXX $LDFLAGS -o real real.lo $LIBS], [0], [ignore], [ignore])
-AT_CHECK([./real], [0], [expout], [ignore])
 AT_CLEANUP
