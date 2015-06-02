@@ -17,10 +17,14 @@
  * along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "parser.hh"
 #include "exceptions.hh"
+#include "parser.hh"
 
+#include <iostream>
 #include <sstream>
+#include <algorithm>
+#include <iterator>
+#include <utility>
 
 toml::parser::parser() {}
 
@@ -52,12 +56,17 @@ void toml::parser::parse() {
   iterator_type iter = tokens.begin(it, contents.end());
   iterator_type end = tokens.end();
 
+  ast::statements_type statements;
+
   bool result =
-    qi::phrase_parse(iter, end, grammar, qi::in_state("WS")[tokens.self]);
+    qi::phrase_parse(iter, end, grammar, qi::in_state("WS")[tokens.self], statements);
 
   if (result && iter == end) {
     std::cout << "parsing succeeded" << std::endl;
+    for (auto statement : statements) {
+      statement.dump(std::cout);
+    }
   } else {
-    std::cerr << "parsing failed" << std::endl;
+    throw runtime_error("Parsing failed");
   }
 }

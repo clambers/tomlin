@@ -20,6 +20,8 @@
  * along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "ast.hh"
+
 #include <boost/config/warning_disable.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/lex_lexertl.hpp>
@@ -40,48 +42,40 @@ namespace toml {
   struct tokens : lex::lexer<Lexer> {
     tokens() {
       identifier = "[a-zA-Z_][a-zA-Z0-9_]*";
-      integer = "-?[0-9]+";
+      integer = "[+-]?[0-9]+";
+      float_ = "[+-]?[0-9]+\\.[0-9]+";
+      string = "\\\"[^\"]*\\\"";
 
-      this->self = lex::token_def<>('"') | '=' | integer;
-      this->self += identifier;
+      this->self
+        = lex::token_def<>('=')
+        | '[' | ']'
+        | identifier
+        | integer
+        | float_
+        | string
+        ;
+
       this->self("WS") = lex::token_def<>("[ \\t\\n]+");
     }
 
-    lex::token_def<std::string> identifier;
-    lex::token_def<long> integer;
+    lex::token_def<ast::identifier_type> identifier;
+    lex::token_def<ast::integer_type> integer;
+    lex::token_def<ast::float_type> float_;
+    lex::token_def<ast::string_type> string;
   };
 
   template<typename Iter, typename Lexer>
-  struct grammar : qi::grammar<Iter, qi::in_state_skipper<Lexer> > {
+  struct grammar : qi::grammar<Iter, ast::statements_type(), qi::in_state_skipper<Lexer> > {
     template<typename TokenDef>
     grammar(TokenDef const& tok) : grammar::base_type(data) {
-      using qi::_1;
-      using qi::_2;
-      using boost::spirit::_val;
-      using boost::phoenix::val;
-
-      data
-        = *assignment
-        ;
-
-      assignment
-        = (tok.identifier >> '=' >> expression) [
-            std::cout << val("assign ") << _1 << " to " << _2 << std::endl
-          ]
-        ;
-
-      expression
-        = tok.identifier [ _val = _1 ]
-        | tok.integer    [ _val = _1 ]
-        ;
+      data %= *assignment;
+      assignment %= tok.identifier >> '=' >> expression;
+      expression %= tok.integer | tok.float_ | tok.string;
     }
 
-    typedef boost::variant<long, std::string> expression_type;
-
-    qi::rule<Iter, qi::in_state_skipper<Lexer> > data;
-    qi::rule<Iter, qi::in_state_skipper<Lexer> > assignment;
-
-    qi::rule<Iter, expression_type(), qi::in_state_skipper<Lexer> > expression;
+    qi::rule<Iter, ast::statements_type(), qi::in_state_skipper<Lexer> > data;
+    qi::rule<Iter, ast::statement_type(), qi::in_state_skipper<Lexer> > assignment;
+    qi::rule<Iter, ast::value_type(), qi::in_state_skipper<Lexer> > expression;
   };
 
   class parser {

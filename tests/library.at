@@ -24,14 +24,22 @@ AT_BANNER([Library testing.])
 AT_SETUP([Basic program])
 AT_DATA([test.toml],
 [[foo = 42
-bar = 9
+bar=  9
+baz  = "lorem"
 ]])
 AX_TEST([basic],
 [AX_INCLUDE_HEADER
 [#include <iostream>
+#include <exception>
+#include <stdexcept>
 int main(void) {
-  toml::parser p("test.toml");
-  p.parse();
+  try {
+    toml::parser parser("test.toml");
+    parser.parse();
+  } catch (std::runtime_error const& e) {
+    std::cerr << e.what() << std::endl;
+    return 1;
+  }
   return 0;
 }
 ]])
