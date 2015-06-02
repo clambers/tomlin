@@ -23,8 +23,8 @@ AT_BANNER([Library testing.])
 
 AT_SETUP([Basic program])
 AT_DATA([test.toml],
-[["foo"   "bar"  "baz"
-"quux"
+[[foo = 42
+bar = 9
 ]])
 AX_TEST([basic],
 [AX_INCLUDE_HEADER

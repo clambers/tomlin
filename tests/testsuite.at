@@ -19,11 +19,18 @@ AT_INIT
 AT_COPYRIGHT([Copyright (C) 2015 Chris Lamberson.])
 AT_COLOR_TESTS
 
+# AX_DO(COMMAND)
+# --------------
+# Run a command, failing if status != 0.
+m4_define([AX_DO],
+[m4_define([COMMAND], [$1])
+AT_CHECK([COMMAND], [0], [ignore], [ignore])
+])
+
 # AX_INCLUDE_HEADER
 # -----------------
 # Standard code for including the library header.
 m4_define([AX_INCLUDE_HEADER], [#include <exceptions.hh>
-#include <value.hh>
 #include <parser.hh>])
 
 # AX_TEST(TARGET, CODE)
@@ -31,10 +38,13 @@ m4_define([AX_INCLUDE_HEADER], [#include <exceptions.hh>
 # Compile a C++ program and check that it exits cleanly.
 m4_define([AX_TEST],
 [m4_pushdef([TARGET], m4_bpatsubst([$1], [/*]))
+m4_pushdef([CODE], [$2])
 AT_DATA([TARGET.cc], [$2])
-AT_CHECK([$LIBTOOL --tag=CC --mode=compile $CXX $CPPFLAGS $CXXFLAGS -c TARGET.cc], [0], [ignore], [ignore])
-AT_CHECK([$LIBTOOL --tag=CC --mode=link $CXX $LDFLAGS -o TARGET TARGET.lo $LIBS], [0], [ignore], [ignore])
-AT_CHECK([./TARGET], [0], [ignore], [ignore])
+AX_DO([$LIBTOOL --tag=CC --mode=compile $CXX $CPPFLAGS $CXXFLAGS -c TARGET.cc])
+AX_DO([$LIBTOOL --tag=CC --mode=link $CXX $LDFLAGS -o TARGET TARGET.lo $LIBS])
+AX_DO([./TARGET])
+m4_popdef([CODE])
+m4_popdef([TARGET])
 ])
 
 m4_include([library.at])

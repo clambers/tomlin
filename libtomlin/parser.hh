@@ -20,35 +20,68 @@
  * along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "value.hh"
-
 #include <boost/config/warning_disable.hpp>
 #include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/lex_lexertl.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
+
+#include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 
 namespace toml {
   namespace {
     namespace qi = boost::spirit::qi;
-    namespace ascii = boost::spirit::ascii;
+    namespace lex = boost::spirit::lex;
   }
 
-  template<typename T> struct grammar :
-    qi::grammar<T, std::vector<string_type>(), ascii::space_type> {
-    grammar() : grammar::base_type(data) {
-      using qi::lit;
-      using qi::lexeme;
-      using ascii::char_;
+  template<typename Lexer>
+  struct tokens : lex::lexer<Lexer> {
+    tokens() {
+      identifier = "[a-zA-Z_][a-zA-Z0-9_]*";
+      integer = "-?[0-9]+";
 
-      string %= '"'
-             >> lexeme[+(char_ - '"')]
-             >> '"';
-
-      data %= *string;
+      this->self = lex::token_def<>('"') | '=' | integer;
+      this->self += identifier;
+      this->self("WS") = lex::token_def<>("[ \\t\\n]+");
     }
 
-    qi::rule<T, std::vector<string_type>(), ascii::space_type> data;
-    qi::rule<T, string_type(), ascii::space_type> string;
+    lex::token_def<std::string> identifier;
+    lex::token_def<long> integer;
+  };
+
+  template<typename Iter, typename Lexer>
+  struct grammar : qi::grammar<Iter, qi::in_state_skipper<Lexer> > {
+    template<typename TokenDef>
+    grammar(TokenDef const& tok) : grammar::base_type(data) {
+      using qi::_1;
+      using qi::_2;
+      using boost::spirit::_val;
+      using boost::phoenix::val;
+
+      data
+        = *assignment
+        ;
+
+      assignment
+        = (tok.identifier >> '=' >> expression) [
+            std::cout << val("assign ") << _1 << " to " << _2 << std::endl
+          ]
+        ;
+
+      expression
+        = tok.identifier [ _val = _1 ]
+        | tok.integer    [ _val = _1 ]
+        ;
+    }
+
+    typedef boost::variant<long, std::string> expression_type;
+
+    qi::rule<Iter, qi::in_state_skipper<Lexer> > data;
+    qi::rule<Iter, qi::in_state_skipper<Lexer> > assignment;
+
+    qi::rule<Iter, expression_type(), qi::in_state_skipper<Lexer> > expression;
   };
 
   class parser {

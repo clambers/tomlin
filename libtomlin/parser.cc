@@ -20,49 +20,44 @@
 #include "parser.hh"
 #include "exceptions.hh"
 
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <utility>
+#include <sstream>
 
-using namespace toml;
+toml::parser::parser() {}
 
-parser::parser() {}
+toml::parser::parser(std::string const& p) : path(p) {}
 
-parser::parser(std::string const& p) : path(p) {}
+toml::parser::~parser() {}
 
-parser::~parser() {}
+void toml::parser::parse() {
+  typedef std::string::iterator base_iterator_type;
+  typedef lex::lexertl::token<
+    base_iterator_type,
+    boost::mpl::vector<long, std::string>
+  > token_type;
+  typedef lex::lexertl::lexer<token_type> lexer_type;
+  typedef toml::tokens<lexer_type> tokens_type;
+  typedef tokens_type::iterator_type iterator_type;
+  typedef toml::grammar<iterator_type, tokens_type::lexer_def> grammar_type;
 
-void parser::parse() {
-  std::ifstream in(path, std::ios_base::in);
+  tokens_type tokens;
+  grammar_type grammar(tokens);
 
-  if (!in) {
-    throw runtime_error("couldn't open file");
-  }
+  std::ifstream in(path, std::ios::in | std::ios::binary);
+  std::ostringstream os;
+  os << in.rdbuf();
+  in.close();
+  std::string contents(os.str());
 
-  using storage_type = std::string;
-  using storage_iterator = storage_type::const_iterator;
-  using grammar = grammar<storage_iterator>;
+  std::string::iterator it = contents.begin();
+  iterator_type iter = tokens.begin(it, contents.end());
+  iterator_type end = tokens.end();
 
-  storage_type storage;
-  in.unsetf(std::ios::skipws);
-  std::copy(std::istream_iterator<char>(in),
-            std::istream_iterator<char>(),
-            std::back_inserter(storage));
-
-  grammar data;
-  std::vector<string_type> ast;
-
-  using boost::spirit::ascii::space;
-
-  storage_iterator iter = std::begin(storage);
-  storage_iterator end = std::end(storage);
-
-  bool result = phrase_parse(iter, end, data, space, ast);
+  bool result =
+    qi::phrase_parse(iter, end, grammar, qi::in_state("WS")[tokens.self]);
 
   if (result && iter == end) {
-    for (auto s : ast) {
-      std::cout << s << std::endl;
-    }
+    std::cout << "parsing succeeded" << std::endl;
+  } else {
+    std::cerr << "parsing failed" << std::endl;
   }
 }
