@@ -40,9 +40,9 @@ void toml::parser::parse() {
   typedef lex::lexertl::token<
     base_iterator_type,
     boost::mpl::vector<
-      ast::boolean_type,
       ast::integer_type,
       ast::float_type,
+      ast::boolean_type,
       ast::string_type
     >
   > token_type;
@@ -71,7 +71,6 @@ void toml::parser::parse() {
                      qi::in_state("WS")[tokens.self], statements);
 
   if (result && iter == end) {
-    std::cout << "parsing succeeded" << std::endl;
     for (auto statement : statements) {
       statement.dump(std::cout);
     }

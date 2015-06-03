@@ -45,9 +45,9 @@ namespace toml {
          | tok.literal_string;
 
       expression
-        %= tok.boolean
-         | tok.integer
+        %= tok.integer
          | tok.float_
+         | tok.boolean
          | string;
     }
 

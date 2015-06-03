@@ -29,18 +29,18 @@ void toml::ast::statement_type::dump(std::ostream& os) {
 
 toml::ast::ostream_visitor::ostream_visitor(std::ostream& os) : os(os) {}
 
-void toml::ast::ostream_visitor::operator()(boolean_type const& boolean) const {
-  os << (boolean ? "true" : "false");
+void toml::ast::ostream_visitor::operator()(float_type const& float_) const {
+  os << "float(" << float_ << ")";
 }
 
 void toml::ast::ostream_visitor::operator()(integer_type const& integer) const {
-  os << integer;
+  os << "integer(" << integer << ")";
 }
 
-void toml::ast::ostream_visitor::operator()(float_type const& float_) const {
-  os << float_;
+void toml::ast::ostream_visitor::operator()(boolean_type const& boolean) const {
+  os << "boolean(" << (boolean ? "true" : "false") << ")";
 }
 
 void toml::ast::ostream_visitor::operator()(string_type const& string) const {
-  os << string;
+  os << "string(" << string << ")";
 }

@@ -31,14 +31,14 @@
 namespace toml {
   namespace ast {
     using identifier_type = std::string;
-    using boolean_type = bool;
     using integer_type = long;
     using float_type = double;
+    using boolean_type = bool;
     using string_type = std::string;
     using value_type = boost::variant<
-      boolean_type,
       integer_type,
       float_type,
+      boolean_type,
       string_type
     >;
 
@@ -55,9 +55,9 @@ namespace toml {
       std::ostream& os;
 
       ostream_visitor(std::ostream&);
-      void operator()(boolean_type const&) const;
-      void operator()(integer_type const&) const;
       void operator()(float_type const&) const;
+      void operator()(integer_type const&) const;
+      void operator()(boolean_type const&) const;
       void operator()(string_type const&) const;
     };
   }
