@@ -24,6 +24,7 @@
 void toml::ast::statement_type::dump(std::ostream& os) {
   os << identifier << ": ";
   boost::apply_visitor(ostream_visitor(os), value);
+  os << std::endl;
 }
 
 toml::ast::ostream_visitor::ostream_visitor(std::ostream& os) : os(os) {}
