@@ -37,12 +37,23 @@ namespace toml {
     template<typename TokenDef>
     grammar(TokenDef const& tok) : grammar::base_type(data) {
       data %= *assignment;
+
       assignment %= tok.identifier >> '=' >> expression;
-      expression %= tok.integer | tok.float_ | tok.string;
+
+      string
+        %= tok.basic_string
+         | tok.literal_string;
+
+      expression
+        %= tok.boolean
+         | tok.integer
+         | tok.float_
+         | string;
     }
 
     qi::rule<Iter, ast::statements_type(), qi::in_state_skipper<Lexer> > data;
     qi::rule<Iter, ast::statement_type(), qi::in_state_skipper<Lexer> > assignment;
+    qi::rule<Iter, ast::string_type(), qi::in_state_skipper<Lexer> > string;
     qi::rule<Iter, ast::value_type(), qi::in_state_skipper<Lexer> > expression;
   };
 }

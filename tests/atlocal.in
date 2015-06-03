@@ -15,9 +15,4 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
 
-LIBTOOL="$abs_top_builddir/libtool"
-CXX='@CXX@'
-CPPFLAGS="-I$abs_top_srcdir/libtomlin @CPPFLAGS@"
-CXXFLAGS="-std=c++11"
-LDFLAGS=
-LIBS="$abs_top_builddir/libtomlin/libtomlin.la"
+PARSER="@abs_top_builddir@/tests/parser"

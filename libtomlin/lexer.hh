@@ -32,26 +32,32 @@ namespace toml {
   struct tokens : lex::lexer<Lexer> {
     tokens() {
       identifier = "[a-zA-Z_][a-zA-Z0-9_]*";
+      boolean = "\"true\"|\"false\"";
       integer = "[+-]?[0-9]+";
       float_ = "[+-]?[0-9]+\\.[0-9]+";
-      string = "\\\"[^\"]*\\\"";
+      basic_string = "\\\"[^\"]*\\\"";
+      literal_string = "'[^']*'";
 
       this->self
         = lex::token_def<>('=')
         | '[' | ']'
         | identifier
+        | boolean
         | integer
         | float_
-        | string
+        | basic_string
+        | literal_string
         ;
 
       this->self("WS") = lex::token_def<>("[ \\t\\n]+");
     }
 
     lex::token_def<ast::identifier_type> identifier;
+    lex::token_def<ast::boolean_type> boolean;
     lex::token_def<ast::integer_type> integer;
     lex::token_def<ast::float_type> float_;
-    lex::token_def<ast::string_type> string;
+    lex::token_def<ast::string_type> basic_string;
+    lex::token_def<ast::string_type> literal_string;
   };
 }
 

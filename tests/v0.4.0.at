@@ -15,11 +15,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
 
-AT_INIT
-AT_COPYRIGHT([Copyright (C) 2015 Chris Lamberson.])
-AT_COLOR_TESTS
+## ----------- ##
+## TOML v0.4.0 ##
+## ----------- ##
 
-m4_include([v0.1.0.at])
-m4_include([v0.2.0.at])
-m4_include([v0.3.1.at])
-m4_include([v0.4.0.at])
+AT_BANNER([TOML v0.4.0])
+
+AT_SETUP([Not implemented])
+AT_CHECK([true], [0], [ignore], [ignore])
+AT_CLEANUP

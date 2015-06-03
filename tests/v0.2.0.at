@@ -15,32 +15,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
 
-## --------------- ##
-## Library testing ##
-## --------------- ##
+## ----------- ##
+## TOML v0.2.0 ##
+## ----------- ##
 
-AT_BANNER([Library testing.])
+AT_BANNER([TOML v0.2.0])
 
-AT_SETUP([Basic program])
-AT_DATA([test.toml],
-[[foo = 42
-bar=  9
-baz  = "lorem"
-]])
-AX_TEST([basic],
-[AX_INCLUDE_HEADER
-[#include <iostream>
-#include <exception>
-#include <stdexcept>
-int main(void) {
-  try {
-    toml::parser parser("test.toml");
-    parser.parse();
-  } catch (std::runtime_error const& e) {
-    std::cerr << e.what() << std::endl;
-    return 1;
-  }
-  return 0;
-}
-]])
+AT_SETUP([Not implemented])
+AT_CHECK([true], [0], [ignore], [ignore])
 AT_CLEANUP

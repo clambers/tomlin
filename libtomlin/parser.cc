@@ -39,7 +39,12 @@ void toml::parser::parse() {
   typedef std::string::iterator base_iterator_type;
   typedef lex::lexertl::token<
     base_iterator_type,
-    boost::mpl::vector<ast::integer_type, ast::float_type, ast::string_type>
+    boost::mpl::vector<
+      ast::boolean_type,
+      ast::integer_type,
+      ast::float_type,
+      ast::string_type
+    >
   > token_type;
   typedef lex::lexertl::lexer<token_type> lexer_type;
   typedef toml::tokens<lexer_type> tokens_type;
@@ -62,7 +67,8 @@ void toml::parser::parse() {
   ast::statements_type statements;
 
   bool result =
-    qi::phrase_parse(iter, end, grammar, qi::in_state("WS")[tokens.self], statements);
+    qi::phrase_parse(iter, end, grammar,
+                     qi::in_state("WS")[tokens.self], statements);
 
   if (result && iter == end) {
     std::cout << "parsing succeeded" << std::endl;

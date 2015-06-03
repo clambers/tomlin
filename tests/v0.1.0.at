@@ -1,0 +1,126 @@
+# Copyright (C) 2015 Chris Lamberson.
+#
+# This file is part of Tomlin.
+#
+# Tomlin is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Tomlin is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
+
+## ----------- ##
+## TOML v0.1.0 ##
+## ----------- ##
+
+AT_BANNER([TOML v0.1.0])
+
+AT_SETUP([Comment])
+AT_DATA([comment.toml],
+[[# I am a comment. Hear me roar. Roar.
+key = "value" # Yeah, you can do this.
+]])
+AT_DATA([expout],
+[[key: string("value")
+]])
+AT_CHECK([$PARSER comment.toml], [0], [expout], [ignore])
+AT_CLEANUP
+
+AT_SETUP([String])
+AT_DATA([string_good.toml],
+[[key = "a\bb\tc\nd\fe\nf\rg\"\/\\\u0068"
+]])
+AT_DATA([expout],
+[[key: string("b	c
+d
+ e
+g"/\h")
+]])
+AT_DATA([string_bad.toml],
+[[wrong = "C:\Windows\Directory"
+]])
+AT_DATA([experr],
+[[tomlin error: parsing failed
+]])
+AT_CHECK([$PARSER string_good.toml], [0], [expout], [ignore])
+AT_CHECK([$PARSER string_bad.toml], [1], [ignore], [experr])
+AT_CLEANUP
+
+AT_SETUP([Integer])
+AT_DATA([integer.toml],
+[[pos = 42
+neg = -17
+]])
+AT_DATA([expout],
+[[pos: integer(42)
+neg: integer(-17)
+]])
+AT_CHECK([$PARSER integer.toml], [0], [expout], [ignore])
+AT_CLEANUP
+
+AT_SETUP([Float])
+AT_DATA([float.toml],
+[[pos = 3.1415
+neg = -0.01
+]])
+AT_DATA([expout],
+[[pos: float(3.1415)
+neg: float(-0.01)
+]])
+AT_CHECK([$PARSER float.toml], [0], [expout], [ignore])
+AT_CLEANUP
+
+AT_SETUP([Boolean])
+AT_DATA([boolean.toml],
+[[t = true
+f = false
+]])
+AT_DATA([expout],
+[[t: boolean(true)
+f: boolean(false)
+]])
+AT_CHECK([$PARSER boolean.toml], [0], [expout], [ignore])
+AT_CLEANUP
+
+AT_SETUP([Datetime])
+AT_DATA([datetime.toml],
+[[epoch = 1979-05-27T07:07:32:00Z
+]])
+AT_DATA([expout],
+[[epoch: datetime(1979-05-27T07:07:32:00Z)
+]])
+AT_CHECK([$PARSER datetime.toml], [0], [expout], [ignore])
+AT_CLEANUP
+
+AT_SETUP([Array])
+AT_DATA([array_good.toml],
+[[a1 = [ "red", "yellow", "green" ]
+a2 = [ [ 1, 2 ], [ 3, 4, 5 ] ]
+]])
+AT_DATA([expout],
+[[a1: array(string("red"),string("yellow"),string("green"))
+a2: array(array(integer(1),integer(2)),array(integer(3),integer(4),integer(5)))
+]])
+AT_DATA([array_bad.toml],
+[[wrong = [ [ 1, 2 ] [ "a", "b", "c" ] ]
+]])
+AT_CHECK([$PARSER array_good.toml], [0], [expout], [ignore])
+AT_CHECK([$PARSER array_bad.toml], [1], [ignore], [ignore])
+AT_CLEANUP
+
+AT_SETUP([Hash])
+AT_DATA([hash.toml],
+[[[key.tater]
+type = "pug"
+]])
+AT_DATA([expout],
+[[key: object(tater: object(type: string("pug")))
+]])
+AT_CHECK([$PARSER hash.toml], [0], [expout], [ignore])
+AT_CLEANUP
