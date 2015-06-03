@@ -21,7 +21,9 @@
  */
 
 #include <tomlin/exceptions.hh>
-#include <tomlin/value.hh>
+#include <tomlin/ast.hh>
+#include <tomlin/lexer.hh>
+#include <tomlin/grammar.hh>
 #include <tomlin/parser.hh>
 
 #endif

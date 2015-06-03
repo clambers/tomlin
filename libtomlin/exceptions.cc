@@ -19,14 +19,12 @@
 
 #include "exceptions.hh"
 
-using namespace toml;
+std::ostringstream toml::runtime_error::full_message;
 
-std::ostringstream runtime_error::full_message;
-
-runtime_error::runtime_error(std::string const& e)
+toml::runtime_error::runtime_error(std::string const& e)
   : std::runtime_error("tomlin error: "), error_message(e) {}
 
-char const* runtime_error::what() const noexcept {
+char const* toml::runtime_error::what() const noexcept {
   full_message.str("");
   full_message << std::runtime_error::what() << error_message;
   return full_message.str().c_str();

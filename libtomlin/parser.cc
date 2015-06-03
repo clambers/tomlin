@@ -19,12 +19,15 @@
 
 #include "parser.hh"
 #include "exceptions.hh"
+#include "ast.hh"
+#include "lexer.hh"
+#include "grammar.hh"
 
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <algorithm>
 #include <iterator>
-#include <utility>
 
 toml::parser::parser() {}
 
@@ -67,6 +70,6 @@ void toml::parser::parse() {
       statement.dump(std::cout);
     }
   } else {
-    throw runtime_error("Parsing failed");
+    throw runtime_error("parsing failed");
   }
 }

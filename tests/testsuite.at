@@ -30,8 +30,7 @@ AT_CHECK([COMMAND], [0], [ignore], [ignore])
 # AX_INCLUDE_HEADER
 # -----------------
 # Standard code for including the library header.
-m4_define([AX_INCLUDE_HEADER], [#include <exceptions.hh>
-#include <parser.hh>])
+m4_define([AX_INCLUDE_HEADER], [#include <parser.hh>])
 
 # AX_TEST(TARGET, CODE)
 # ---------------------

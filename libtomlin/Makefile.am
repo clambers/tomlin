@@ -15,10 +15,14 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
 
+include_tomlindir = $(includedir)/tomlin
+
 include_HEADERS = tomlin.hpp
 
+include_tomlin_HEADERS = exceptions.hh ast.hh lexer.hh grammar.hh parser.hh
+
 lib_LTLIBRARIES = libtomlin.la
-libtomlin_la_SOURCES = exceptions.cc exceptions.hh ast.cc ast.hh parser.cc parser.hh
+libtomlin_la_SOURCES = exceptions.cc exceptions.hh ast.cc ast.hh lexer.hh grammar.hh parser.cc parser.hh
 libtomlin_la_CPPFLAGS = $(BOOST_CPPFLAGS)
 libtomlin_la_CXXFLAGS = -std=c++11
 libtomlin_la_LDFLAGS = -version-info 0:0:0
