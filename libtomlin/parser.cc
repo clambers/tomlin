@@ -17,8 +17,8 @@
  * along with Tomlin.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "exceptions.hh"
 #include "parser.hh"
+#include "exceptions.hh"
 
 #include <iostream>
 #include <sstream>
@@ -36,7 +36,7 @@ void toml::parser::parse() {
   typedef std::string::iterator base_iterator_type;
   typedef lex::lexertl::token<
     base_iterator_type,
-    boost::mpl::vector<long, std::string>
+    boost::mpl::vector<ast::integer_type, ast::float_type, ast::string_type>
   > token_type;
   typedef lex::lexertl::lexer<token_type> lexer_type;
   typedef toml::tokens<lexer_type> tokens_type;

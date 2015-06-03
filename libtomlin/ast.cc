@@ -1,11 +1,13 @@
 #include "ast.hh"
 
+#include <boost/variant/apply_visitor.hpp>
+
 void toml::ast::statement_type::dump(std::ostream& os) {
   os << identifier << ": ";
-  boost::apply_visitor(value, ostream_visitor(os));
+  boost::apply_visitor(ostream_visitor(os), value);
 }
 
-toml::ast::ostream_visitor(std::ostream& os) : os(os) {}
+toml::ast::ostream_visitor::ostream_visitor(std::ostream& os) : os(os) {}
 
 void toml::ast::ostream_visitor::operator()(integer_type const& integer) const {
   os << integer;

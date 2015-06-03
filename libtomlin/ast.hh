@@ -24,7 +24,9 @@
 #include <boost/variant.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 
+#include <iostream>
 #include <string>
+#include <vector>
 
 namespace toml {
   namespace ast {
